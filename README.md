@@ -6,7 +6,9 @@
 
 ## 教材版
 
-本文照合版 `textbook-walkthrough-2026-09-06` を使用します。対応ブランチは `curriculum/textbook-walkthrough` です。PRのマージ前はこのブランチで確認してください。旧チェックポイントを混ぜず、`curriculum/edition.json`を確認します。
+本文照合版 `textbook-walkthrough-2026-09-06` を使用します。初めて取得するときは、このリポジトリの `master` を使います。自分の制作リポジトリでは `main` で作業します。教材版と配布元ブランチは `curriculum/edition.json` で確認できます。
+
+すでに制作を始めている場合は、自分の `react-next-portfolio` で続きを進めます。配布元の変更を取り入れるときは、必要なファイルの差分を確認します。自分のプロフィールやデザインを含むフォルダ全体を取り直す操作は不要です。
 
 出発点にはTOP、プロフィール、ブログ一覧・詳細、作品一覧・詳細、サンプル画像、共通部品があります。CMSの一覧・詳細の取得はまだサンプルを返すため、NotionのT09とT10で実装します。安全な本文表示と環境変数の確認は講師提供部分として用意しています。
 
@@ -55,27 +57,40 @@ git config --local --get user.email
 
 ## 起動と確認
 
-Node.js 24系とnpm、Gitを使用します。自分用のリポジトリを作る手順はNotionのT05に記載しています。
+Node.js 24系とnpm、Gitを使用します。初回の取得、別のPCでの再開、保存までの操作は[コマンドと確認結果](curriculum/COMMANDS.md)にまとめています。Notionでは第5回のT05から始めます。
+
+Visual Studio Codeで自分の `react-next-portfolio` を開き、「ターミナル → 新しいターミナル」で次を実行します。`pwd` の末尾が `react-next-portfolio` で、`ls package.json` にファイル名が表示されることを確認します。
+
+````bash
+pwd
+ls package.json
+node -v
+````
+
+`node -v` が `v24.` で始まることを確認します。配布元を初めて取得した直後は `npm install` を実行し、成功してから起動します。
 
 ````bash
 npm install
 npm run dev
 ````
 
-http://localhost:3000 を開きます。最初は環境変数がなくてもサンプルで動きます。再開時のpullは別のPCで保存した変更を取り込む場合だけ、インストールは初回または依存関係の変更時だけ行います。`package-lock.json` は差分を確認し、`package.json` と一緒にコミットします。
+ターミナルに表示されたローカルURLを開きます。通常は <http://localhost:3000> です。最初は環境変数がなくてもサンプルで動きます。`npm run dev` は起動したまま使い、止めるときはそのターミナルでCtrl+Cを押します。
+
+同じPCで依存関係が変わっていなければ、再開時は `npm run dev` だけで起動できます。別のPCで自分のリポジトリを取得した場合は、保存済みの `package-lock.json` があれば `npm ci` で同じ依存関係を導入します。初回に生成された `package-lock.json` は自分のGitHubへ保存します。
+
+動作を確認したらCtrl+Cで開発サーバーを止め、次を実行します。
 
 ````bash
 npm run check
-npm run test:curriculum
 ````
 
-checkはLint、TypeScript型検査、本番ビルドです。通常はcheckを1回実行し、同じ3検査を個別に重ねる必要はありません。test:curriculumは教材用コードの検証です。
+`check` はLint、TypeScript型検査、本番ビルドを順に行います。エラーが出た場合は最初のエラーを確認し、修正後に再実行します。画面確認へ戻るときは `npm run dev` で起動し直します。`npm run test:curriculum` は教材管理者が段階別の実装例を検証するコマンドです。
 
 ## microCMS
 
 blogsとworksはリスト形式です。titleはテキストフィールドで必須、descriptionはテキストエリア、contentはリッチエディタ、thumbnailは画像として用意します。後ろの3項目はスキーマ上は任意ですが、提出用記事2件と作品1件には内容と画像を登録します。
 
-`.env.example`を`.env.local`へコピーし、MICROCMS_SERVICE_DOMAINとMICROCMS_API_KEYを設定します。サービスIDにはURLを入れません。キーはGET専用にし、NEXT_PUBLIC_を付けません。APIキーの値をGitHubや提出物へ含めないでください。
+T08で `.env.example` を複製し、`package.json` と同じ場所に `.env.local` を作ります。すでにある場合は必要な項目だけを編集します。MICROCMS_SERVICE_DOMAINにはサービスID、MICROCMS_API_KEYにはGET専用キーを設定します。サービスIDにはURLを入れません。キーの変数名にNEXT_PUBLIC_を付けず、値をGitHubや提出物へ含めないでください。
 
 この授業では、練習用の無料サービスで発行したGET専用キーに限り、自分の共有Macの作業フォルダの `.env.local` に保存したままで構いません。毎回の削除・再発行は不要です。インターネットへ公開してよいという意味ではなく、個人情報・実務データを扱うサービスや書き込み権限のあるキーは使いません。共有Macを離れる際は、管理画面からログアウトします。
 
@@ -83,7 +98,9 @@ blogsとworksはリスト形式です。titleはテキストフィールドで�
 node --env-file=.env.local scripts/check-cms.mjs
 ````
 
-T09以降、接続設定の不足をサンプルへ切り替えて隠しません。サイトが表示されただけでなく、自分がCMSで作成したタイトルと更新が反映されることを確認します。
+このコマンドは制作フォルダで実行します。`blogs` と `works` の両方に「接続成功」と公開件数が表示されれば接続確認は完了です。環境変数を変えた後は、開発サーバーをCtrl+Cで止め、`npm run dev` で起動し直します。
+
+T08の接続確認後も、サイトはサンプルを表示します。T09で一覧、T10で詳細の取得関数を変更し、自分がCMSで作成したタイトルと本文の更新が反映されることを確認します。接続設定が不足している場合はエラーになるので、[接続確認の結果と対処](curriculum/COMMANDS.md#cms-result)を参照してください。
 
 ## デザイン
 
@@ -105,4 +122,4 @@ microCMSの記事・作品・画像も期限までに仕上げます。これら
 
 Notionのコードは `curriculum/steps` と対応しています。[教材の設計と検証](curriculum/README.md)、[復帰時の注意](CHECKPOINTS.md)を参照してください。普段は自分のコードを続け、解答へ一括切り替えたり、毎回チェックポイントへ戻ったりしません。
 
-変更したファイルを確認し、秘密情報を含めずにコミット・プッシュします。完成時は、このREADMEを自分の作品、公開URL、使用技術、起動方法、工夫、生成AIの検証記録へ書き換えます。
+変更したファイルを確認し、秘密情報を含めずにコミット・プッシュします。操作と保存結果の確認は[作業をGitHubへ保存する](curriculum/COMMANDS.md#save)を使います。完成時は、このREADMEを自分の作品、公開URL、使用技術、起動方法、工夫、生成AIの検証記録へ書き換えます。
