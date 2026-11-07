@@ -1,19 +1,27 @@
 export const profile = {
-  name: "あなたの名前",
-  role: "Webエンジニアを目指す学生",
+  name: "將野 凌大",
+  role: "AI・Web開発・サイバーセキュリティを学ぶ学生",
   introduction:
-    "HTML、CSS、JavaScript、Reactを学びながら、使う人に伝わるWebサイトを制作しています。",
+    "ReactやNext.jsを使ったWeb開発を学びながら、AIとサイバーセキュリティの知識も身につけています。利用者にとって分かりやすく、安全に使えるサービスの制作を目指しています。",
   location: "京都",
-  skills: ["HTML", "CSS", "JavaScript", "TypeScript", "React"],
+  skills: [
+    "HTML",
+    "CSS",
+    "JavaScript",
+    "TypeScript",
+    "React",
+    "Next.js",
+    "Git/GitHub",
+  ],
   learningGoals: [
-    "Webサイトの目的に合わせて情報を設計する",
-    "ReactとNext.jsの役割の違いを説明する",
-    "自分で制作したWebサイトを公開し、改善を続ける",
+    "ReactとNext.jsを使って、目的に合ったWebサイトを設計・実装する",
+    "AIを活用して、利用者の課題を解決できるサービスを制作する",
+    "サイバーセキュリティを意識した安全なシステム設計を身につける",
   ],
   links: [
     {
       label: "GitHub",
-      href: "https://github.com/",
+      href: "https://github.com/hatano11",
     },
   ],
 } as const;
